@@ -1,0 +1,26 @@
+version: "3.1"
+services: 
+    backend:
+        image: node-app:1.0.0
+        volumes:
+            - ./:/app
+        environment: 
+            PORT: 3000
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+        depends_on:
+            - redis
+        ports:
+            - "3000:3000"
+        networks:
+            - cache-network
+    redis:
+        image: redis:6.2.3-alpine
+        volumes:
+            - .docker/data/redis:/data
+        restart: unless-stopped
+        networks:
+            - cache-network
+networks:
+    cache-network:
+        driver: bridge
